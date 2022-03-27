@@ -15,7 +15,8 @@ set(SOURCE_DIR src)
 set(SOURCES ${SOURCE_DIR}/utils.cu
         ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
         ${SOURCE_DIR}/HelmholtzSet.cu
-        ${SOURCE_DIR}/main.cu)
+        ${SOURCE_DIR}/main.cu
+        ${SOURCE_DIR}/kernels/env_kernels.cu)
 
 add_executable(HelmholtzCUDA ${SOURCES})
 

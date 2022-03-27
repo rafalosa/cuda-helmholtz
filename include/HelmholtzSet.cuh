@@ -17,7 +17,7 @@ private:
     unsigned int _turns{0};
     float _wireGauge{0.0};
     float _coilCenterDistance{0.0};
-    t_plane _coilsPlane{t_plane::OO};
+    t_plane _coilsPlane{t_plane::OO}; // Default
     unsigned int _coilPolygonSides{0};
     float _sideLen{0.0};
     float _externalAngleIncrement_rad{0.0};
