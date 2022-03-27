@@ -1,3 +1,0 @@
-/home/rafal/Code/CC++/HelmholtzCUDA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/rafal/Code/CC++/HelmholtzCUDA/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/rafal/Code/CC++/HelmholtzCUDA/cmake-build-debug/CMakeFiles/HelmholtzCUDA.dir
