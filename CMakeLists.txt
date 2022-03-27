@@ -12,9 +12,10 @@ endif()
 
 set(HEADERS_DIR include)
 set(SOURCE_DIR src)
-set(SOURCES ${SOURCE_DIR}/magnetics_kernels.cu
-        ${SOURCE_DIR}/main.cu
-        ${SOURCE_DIR}/HelmholtzSet.cu)
+set(SOURCES ${SOURCE_DIR}/utils.cu
+        ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
+        ${SOURCE_DIR}/HelmholtzSet.cu
+        ${SOURCE_DIR}/main.cu)
 
 add_executable(HelmholtzCUDA ${SOURCES})
 

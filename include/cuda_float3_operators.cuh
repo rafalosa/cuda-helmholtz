@@ -2,17 +2,21 @@
 // Created by rafal on 27.03.2022.
 //
 
-#ifndef HELMHOLTZCUDA_CUDA_TYPES_OVERLOADS_CUH
-#define HELMHOLTZCUDA_CUDA_TYPES_OVERLOADS_CUH
+// Forward declarations of operators for float3 cuda type.
+
+#if !defined(HELMHOLTZCUDA_FLOAT3_OVERLOADS_CUH)
+#define HELMHOLTZCUDA_FLOAT3_OVERLOADS_CUH
 
 #include "vector_types.h"
 #include "vector_functions.h"
+#include <iostream>
 
-__host__ __device__ float3 operator+(const float3& v1, const float3& v2){
+// ------------------ Arithmetic operators ------------------
 
-    return make_float3(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z);
+__host__ __device__ float3 operator+(const float3& v1, const float3& v2);
 
-}
+
+// Full declarations are here to avoid doing forward declarations of specialized templates.
 
 template<class ScalarType>
 __host__ __device__ float3 operator*(const float3& vec, const ScalarType& scalar){
@@ -42,6 +46,8 @@ __host__ __device__ float3 operator/(const float3& vec, const ScalarType& scalar
 
 }
 
+// ------------------ Stream operators ------------------
 
+std::ostream& operator<<(std::ostream& os, const float3& vec);
 
-#endif //HELMHOLTZCUDA_CUDA_TYPES_OVERLOADS_CUH
+#endif //HELMHOLTZCUDA_FLOAT3_OVERLOADS_CUH
