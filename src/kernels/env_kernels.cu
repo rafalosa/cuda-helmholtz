@@ -6,6 +6,7 @@
 #include "utils.h"
 
 // todo: Make parameters object for helmholtz set.
+// todo: These kernels should be members of the HelmholtzSet class.
 
 __global__ void setupGPUHelmholtzEnv(HelmholtzSet* helmholtzPtr,
                                      unsigned int shape,

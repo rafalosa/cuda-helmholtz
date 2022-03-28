@@ -38,6 +38,8 @@ namespace SimulatorUtils{
         __host__ __device__  float3 crossProduct(float3 v1, float3 v2);
 
         __host__ __device__ float norm(float3 vec);
+
+        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float step, float* target);
     }
 }
 #endif //HELMHOLTZCUDA_UTILS_H

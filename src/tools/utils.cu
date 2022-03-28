@@ -6,7 +6,7 @@
 
 namespace CUDAUtils{
 
-    void showCudaDeviceProps(int device){
+    __host__ void showCudaDeviceProps(int device){
 
         cudaDeviceProp props{};
 
@@ -46,6 +46,15 @@ namespace SimulatorUtils {
         __host__ __device__ float norm(float3 vec) {
 
             return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+        }
+
+        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float step, float* target){
+
+            for(size_t i=0; i<=steps; i++){
+
+                target[i] = boundary1 + (float)i * step;
+
+            }
         }
     }
 }
