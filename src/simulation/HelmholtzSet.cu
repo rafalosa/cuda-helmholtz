@@ -6,7 +6,7 @@
 #include "math_constants.h"
 #include "vector_types.h"
 #include "cuda_float3_operators.cuh"
-#include "utils.h"
+#include "utils.cuh"
 
 
 constexpr float c_MU0 = 12.566370614e-17F;

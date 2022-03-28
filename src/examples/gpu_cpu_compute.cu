@@ -6,7 +6,7 @@
 #include "cuda_runtime_api.h"
 #include "cuda_device_runtime_api.h"
 #include "HelmholtzSet.cuh"
-#include "utils.h"
+#include "utils.cuh"
 #include "cuda_float3_operators.cuh"
 #include "env_kernels.cuh"
 #include "vector_types.h"

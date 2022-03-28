@@ -2,8 +2,8 @@
 // Created by rafal on 27.03.2022.
 //
 
-#if !defined(HELMHOLTZCUDA_UTILS_H)
-#define HELMHOLTZCUDA_UTILS_H
+#if !defined(HELMHOLTZCUDA_UTILS_CUH)
+#define HELMHOLTZCUDA_UTILS_CUH
 
 #include <initializer_list>
 #include <iostream>
@@ -39,7 +39,7 @@ namespace SimulatorUtils{
 
         __host__ __device__ float norm(float3 vec);
 
-        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float step, float* target);
+       __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float step, float* target);
     }
 }
-#endif //HELMHOLTZCUDA_UTILS_H
+#endif //HELMHOLTZCUDA_UTILS_CUH

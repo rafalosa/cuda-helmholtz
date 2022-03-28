@@ -12,23 +12,24 @@ endif()
 
 set(HEADERS_DIR include)
 set(SOURCE_DIR src)
-set(SOURCES_MAIN ${SOURCE_DIR}/tools/utils.cu
+set(MUTUAL_SRC ${SOURCE_DIR}/tools/utils.cu
         ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
         ${SOURCE_DIR}/simulation/HelmholtzSet.cu
-        ${SOURCE_DIR}/main.cu
         ${SOURCE_DIR}/kernels/env_kernels.cu
         ${SOURCE_DIR}/simulation/Mesher.cu)
 
-set(SOURCES_GPU_CPU_EXAMPLE ${SOURCE_DIR}/tools/utils.cu
-        ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
-        ${SOURCE_DIR}/simulation/HelmholtzSet.cu
-        ${SOURCE_DIR}/examples/gpu_cpu_compute.cu
-        ${SOURCE_DIR}/kernels/env_kernels.cu
-        ${SOURCE_DIR}/simulation/Mesher.cu
+set(SOURCES_MAIN ${MUTUAL_SRC}
+        ${SOURCE_DIR}/main.cu)
+
+set(SOURCES_COMPUTE_EXAMPLE ${MUTUAL_SRC}
         ${SOURCE_DIR}/examples/gpu_cpu_compute.cu)
 
+set(SOURCES_MESHING_EXAMPLE ${MUTUAL_SRC}
+        ${SOURCE_DIR}/examples/meshing.cu)
+
 add_executable(HelmholtzCUDAMain ${SOURCES_MAIN})
-add_executable(Example_GPUCPU ${SOURCES_GPU_CPU_EXAMPLE})
+add_executable(Example_Compute ${SOURCES_COMPUTE_EXAMPLE})
+add_executable(Example_Meshing ${SOURCES_MESHING_EXAMPLE})
 
 set_target_properties(HelmholtzCUDAMain PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
@@ -36,11 +37,18 @@ set_target_properties(HelmholtzCUDAMain PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-set_target_properties(Example_GPUCPU PROPERTIES
+set_target_properties(Example_Compute PROPERTIES
+        CUDA_SEPARABLE_COMPILATION ON
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/arv"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+set_target_properties(Example_Meshing PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
         ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/arv"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 target_include_directories(HelmholtzCUDAMain PRIVATE ${HEADERS_DIR})
-target_include_directories(Example_GPUCPU PRIVATE ${HEADERS_DIR})
+target_include_directories(Example_Compute PRIVATE ${HEADERS_DIR})
+target_include_directories(Example_Meshing PRIVATE ${HEADERS_DIR})

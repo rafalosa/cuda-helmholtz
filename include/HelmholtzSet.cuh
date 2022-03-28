@@ -5,7 +5,7 @@
 #if !defined(HELMHOLTZCUDA_HELMHOLTZSET_CUH)
 #define HELMHOLTZCUDA_HELMHOLTZSET_CUH
 
-#include "utils.h"
+#include "utils.cuh"
 
 
 class HelmholtzSet{

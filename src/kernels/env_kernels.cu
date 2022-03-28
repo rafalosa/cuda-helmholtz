@@ -3,7 +3,7 @@
 //
 
 #include "HelmholtzSet.cuh"
-#include "utils.h"
+#include "utils.cuh"
 
 // todo: Make parameters object for helmholtz set.
 // todo: These kernels should be members of the HelmholtzSet class.
