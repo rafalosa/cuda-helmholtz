@@ -15,16 +15,17 @@ int main() {
         throw std::runtime_error("cuda error");
     }
 
-    auto msh1D = std::make_unique<Mesh<MeshUtils::Dim::D1>>(MeshUtils::Units::METERS, 100, -100, 100);
+    auto msh1D = std::make_unique<Mesh<MeshUtils::Dim::D1, 100>>(MeshUtils::Units::METERS, -100, 100);
 
-    auto msh2D = std::make_unique<Mesh<MeshUtils::Dim::D2>>(MeshUtils::Units::METERS, 100, -100, 100, -100, 100);
+    auto msh2D = std::make_unique<Mesh<MeshUtils::Dim::D2, 100>>(MeshUtils::Units::METERS, -100, 100, -100, 100);
 
-    auto msh3D = std::make_unique<Mesh<MeshUtils::Dim::D3>>(MeshUtils::Units::METERS, 100, -100, 100, -100, 100, -100, 100);
-
+    auto msh3D = std::make_unique<Mesh<MeshUtils::Dim::D3, 100>>(MeshUtils::Units::METERS, -100, 100, -100, 100, -100, 100);
 
     auto val = (*msh3D).get(99,99,99);
 
     std::cout << val << std::endl;
+    auto sizeFrac = (float)Mesh<MeshUtils::Dim::D3, 100>::size() / (float)Mesh<MeshUtils::Dim::D3, 50>::size();
+    std::cout << sizeFrac << std::endl;
 
     return 0;
 }
