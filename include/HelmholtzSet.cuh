@@ -5,7 +5,7 @@
 #if !defined(HELMHOLTZCUDA_HELMHOLTZSET_CUH)
 #define HELMHOLTZCUDA_HELMHOLTZSET_CUH
 
-#include "utils.cuh"
+#include "Utils.cuh"
 
 // todo: Add the same cuda allocation interface as for Meshes.
 

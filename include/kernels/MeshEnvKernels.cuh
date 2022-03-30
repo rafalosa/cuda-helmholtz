@@ -1,7 +1,7 @@
 #ifndef HELMHOLTZCUDA_MESHENVKERNELS_CUH
 #define HELMHOLTZCUDA_MESHENVKERNELS_CUH
 
-#include "mesh_utils.h"
+#include "MeshUtils.h"
 
 template<MeshUtils::Dim, int N>
 class Mesh;

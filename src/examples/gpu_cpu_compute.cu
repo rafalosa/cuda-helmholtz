@@ -1,13 +1,14 @@
 #include <iostream>
 #include <memory>
+#include <vector>
 #include "cuda_runtime_api.h"
 #include "cuda_device_runtime_api.h"
 #include "HelmholtzSet.cuh"
-#include "utils.cuh"
+#include "Utils.cuh"
 #include "cuda_float3_operators.cuh"
 #include "HelmholtzEnvKernels.cuh"
 #include "vector_types.h"
-#include "cudaMacros.cuh"
+#include "CudaMacros.cuh"
 
 using namespace SimulatorUtils::Structures;
 

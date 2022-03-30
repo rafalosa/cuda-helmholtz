@@ -1,5 +1,5 @@
-#ifndef HELMHOLTZCUDA_MESH_UTILS_H
-#define HELMHOLTZCUDA_MESH_UTILS_H
+#ifndef HELMHOLTZCUDA_MESHUTILS_H
+#define HELMHOLTZCUDA_MESHUTILS_H
 
 namespace MeshUtils{
     enum class Dim : short {
@@ -16,4 +16,4 @@ namespace MeshUtils{
     };
 }
 
-#endif //HELMHOLTZCUDA_MESH_UTILS_H
+#endif //HELMHOLTZCUDA_MESHUTILS_H

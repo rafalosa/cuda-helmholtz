@@ -5,11 +5,12 @@
 #ifndef HELMHOLTZCUDA_MESHER_CUH
 #define HELMHOLTZCUDA_MESHER_CUH
 
-#include "utils.cuh"
-#include "cudaAllocatorInterface.cuh"
 #include <cassert>
-#include "cudaMacros.cuh"
-#include "mesh_utils.h"
+
+#include "Utils.cuh"
+#include "CudaAllocatorInterfaces.cuh"
+#include "CudaMacros.cuh"
+#include "MeshUtils.h"
 #include "MeshEnvKernels.cuh"
 
 // todo: The meshes should have a constant point to point distance, now the provided space is equally divided into
@@ -17,6 +18,8 @@
 
 // todo: Implement dynamic meshes.
 
+
+using namespace CUDAUtils::Memory;
 
 class MeshBase {
 protected:

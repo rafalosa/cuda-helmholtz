@@ -2,7 +2,7 @@
 // Created by rafal on 27.03.2022.
 //
 
-#include "utils.cuh"
+#include "Utils.cuh"
 
 namespace CUDAUtils{
 
