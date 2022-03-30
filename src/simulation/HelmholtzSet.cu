@@ -6,6 +6,7 @@
 #include "math_constants.h"
 #include "vector_types.h"
 #include "cuda_float3_operators.cuh"
+#include "cuda_float2_operators.cuh"
 #include "utils.cuh"
 
 

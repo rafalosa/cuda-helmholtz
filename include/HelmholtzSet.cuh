@@ -7,6 +7,7 @@
 
 #include "utils.cuh"
 
+// todo: Add the same cuda allocation interface as for Meshes.
 
 class HelmholtzSet{
 
@@ -26,7 +27,6 @@ private:
 
     __host__ __device__ static float3 _biotSavart(float3 dl, float3 r, float I);
 
-
 public:
 
     __host__ __device__ HelmholtzSet(unsigned int shape,
@@ -38,7 +38,6 @@ public:
                  float dl);
 
     __host__ __device__ float3  pointInductionVector(float3 point, float I) const;
-
 
 };
 

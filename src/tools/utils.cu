@@ -48,11 +48,14 @@ namespace SimulatorUtils {
             return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
         }
 
-        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float step, float* target){
+        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float* target, float multiplier = 1){
 
-            for(size_t i=0; i<=steps; i++){
+            auto linearSpan = (boundary2 - boundary1) * multiplier;
+            float step = (linearSpan / (float)steps);
 
-                target[i] = boundary1 + (float)i * step;
+            for(size_t i=0; i <= steps; i++){
+
+                target[i] = boundary1 * multiplier + (float)i * step;
 
             }
         }

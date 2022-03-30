@@ -2,7 +2,7 @@
 // Created by rafal on 27.03.2022.
 //
 
-#include "cuda_float3_operators.cuh"
+#include "cuda_types_utils/cuda_float3_operators.cuh"
 #include "vector_types.h"
 #include "vector_functions.h"
 #include <iostream>

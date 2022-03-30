@@ -1,6 +1,3 @@
-//
-// Created by rafal on 28.03.2022.
-//
 #include <iostream>
 #include <memory>
 #include "cuda_runtime_api.h"
@@ -8,20 +5,16 @@
 #include "HelmholtzSet.cuh"
 #include "utils.cuh"
 #include "cuda_float3_operators.cuh"
-#include "env_kernels.cuh"
+#include "HelmholtzEnvKernels.cuh"
 #include "vector_types.h"
+#include "cudaMacros.cuh"
 
 using namespace SimulatorUtils::Structures;
 
 int main() {
 
     int count;
-    auto err = cudaGetDeviceCount(&count); // Getting CUDA devices count.
-    if(err != cudaSuccess){
-
-        std::cout << "Error: " << cudaGetErrorName(err) << std::endl;
-        throw std::runtime_error("cuda error");
-    }
+    CUDA_ERRCHK(cudaGetDeviceCount(&count)) // Getting CUDA devices count.
 
     std::cout << "Cuda devices available: " << count << std::endl;
 
@@ -36,20 +29,9 @@ int main() {
     HelmholtzSet* entOnGPU; // Host pointer to GPU memory object.
     float3* resultGPU; // Host pointer to GPU memory storing the result.
 
-    err = cudaMalloc((void**)&resultGPU, sizeof(float3)); // Allocating GPU memory for result.
+    CUDA_ERRCHK(cudaMalloc((void**)&resultGPU, sizeof(float3))) // Allocating GPU memory for result.
 
-    if(err != cudaSuccess){ // "Handling" possible errors.
-
-        std::cout << "Error: " << cudaGetErrorName(err) << std::endl;
-        throw std::runtime_error("Failed to allocate memory on a device.");
-    }
-    err = cudaMalloc((void**)&entOnGPU, sizeof(HelmholtzSet)); // Allocating GPU memory for HelmholtzSet object.
-
-    if(err != cudaSuccess){
-
-        std::cout << "Error: " << cudaGetErrorName(err) << std::endl;
-        throw std::runtime_error("Failed to allocate memory on a device.");
-    }
+    CUDA_ERRCHK(cudaMalloc((void**)&entOnGPU, sizeof(HelmholtzSet))) // Allocating GPU memory for HelmholtzSet object.
 
     setupGPUHelmholtzEnv<<<1,1>>>(entOnGPU,8,60,1.9,200,SimulatorUtils::Geometry::Plane::XY,100,0.1); // Creating GPU environment for computation aka dynamically allocating the object on the GPU.
 
@@ -58,13 +40,7 @@ int main() {
     shutdownGPUHelmholtzEnv<<<1,1>>>(entOnGPU); // Shutting down the GPU environment aka deallocating the created object.
 
     auto resultHost = std::make_unique<float3>(); // Pointer to GPU result on Host.
-    err = cudaMemcpy(resultHost.get(), resultGPU, sizeof(float3), cudaMemcpyDeviceToHost); // Copying GPU result memory to Host pointer.
-
-    if(err != cudaSuccess){
-
-        std::cout << "Error: " << cudaGetErrorName(err) << std::endl;
-        throw std::runtime_error("Failed to memcpy from device.");
-    }
+    CUDA_ERRCHK(cudaMemcpy(resultHost.get(), resultGPU, sizeof(float3), cudaMemcpyDeviceToHost)) // Copying GPU result memory to Host pointer.
 
     cudaFree(resultGPU); // Deallocating memory on GPU.
     cudaFree(entOnGPU);

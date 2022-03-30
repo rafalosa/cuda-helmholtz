@@ -6,28 +6,24 @@
 #define HELMHOLTZCUDA_MESHER_CUH
 
 #include "utils.cuh"
+#include "cudaAllocatorInterface.cuh"
+#include <cassert>
+#include "cudaMacros.cuh"
+#include "mesh_utils.h"
+#include "MeshEnvKernels.cuh"
 
-namespace MeshUtils{
-    enum class Dim : short {
-        D1 = 0,
-        D2 = 1,
-        D3 = 2
-    };
+// todo: The meshes should have a constant point to point distance, now the provided space is equally divided into
+//   N points along each axis.
 
-    enum class Units : short { // Don't know if I'll use it, checking things out.
+// todo: Implement dynamic meshes.
 
-        MILLIMETERS = 1000,
-        CENTIMETERS = 100,
-        METERS = 1,
-    };
-}
 
-class MeshBase{
+class MeshBase {
 protected:
     float meshUnitMultiplier;
     size_t steps_;
-    explicit MeshBase(MeshUtils::Units unitMultiplier, size_t steps) : meshUnitMultiplier((float)unitMultiplier), steps_(steps){};
-    virtual ~MeshBase() = default;
+    __host__ __device__ MeshBase(MeshUtils::Units unitMultiplier, size_t steps) : meshUnitMultiplier((float)unitMultiplier), steps_(steps){};
+    __host__ __device__ virtual ~MeshBase() {}; // = default, results in compilation error (?).
 
 };
 
@@ -35,191 +31,162 @@ template<MeshUtils::Dim, int N>
 class Mesh;
 
 template<int N>
-class Mesh<MeshUtils::Dim::D1, N> : protected MeshBase{
+class Mesh<MeshUtils::Dim::D1, N> : protected MeshBase, protected cudaAllocatableObject{
 
 private:
 
-    float1* pointsArray{nullptr};
+    using meshType = Mesh<MeshUtils::Dim::D1, N>;
+    float1 pointsArray[N]{0.0};
+    float x1B, x2B;
 
 public:
-    Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary): MeshBase(meshUnits, N) {
+    __host__ __device__ Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary): MeshBase(meshUnits, N),
+    cudaAllocatableObject(), x1B(x1Boundary), x2B(x2Boundary) {
 
-        auto linearSpan = x2Boundary - x1Boundary;
-        linearSpan *= meshUnitMultiplier;
-        float step = (linearSpan / (float)steps_) * meshUnitMultiplier;
+        float linArr[N];
 
-        auto linArr = new float [steps_];
-        pointsArray = new float1 [steps_];
-
-        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, step, linArr);
+        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, linArr, meshUnitMultiplier);
 
         for(size_t i = 0; i < steps_; i++){
 
             pointsArray[i].x = linArr[i];
         }
-
-        delete[] linArr;
     }
-    ~Mesh() override {
+    __host__ __device__ ~Mesh() override {}
 
-        delete[] pointsArray;
-    }
-    static size_t size() {
+    __host__ __device__ float1 get(size_t index){
 
-        return N*sizeof(float1);
-    }
-    float1 get(size_t index){
-
+        assert(index < N);
         return pointsArray[index];
+    }
+
+
+    __host__ void newCudaInstance() override{
+        // Not implemented.
+    }
+
+    __host__ void deleteCudaInstance() override{
+        // Not implemented.
+    }
+
+    __host__ meshType** getCudaInstancePtr(){
+        // Not implemented.
+        return nullptr;
     }
 };
 
 template<int N>
-class Mesh<MeshUtils::Dim::D2, N> : protected MeshBase{
+class Mesh<MeshUtils::Dim::D2, N> : protected MeshBase, protected cudaAllocatableObject{
 
 private:
-    float2** pointsArray{nullptr};
+    using meshType = Mesh<MeshUtils::Dim::D2, N>;
+    float2 pointsArray[N][N]{0.0};
+    float x1B, x2B, y1B, y2B;
 
 public:
-    Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary,
-         float y1Boundary, float y2Boundary): MeshBase(meshUnits, N) {
+    __host__ __device__ Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary,
+         float y1Boundary, float y2Boundary): MeshBase(meshUnits, N), cudaAllocatableObject(),
+         x1B(x1Boundary), x2B(x2Boundary), y1B(y1Boundary), y2B(y2Boundary){
 
-        meshUnitMultiplier = (float)meshUnits;
+        float linArrX[N];
+        float linArrY[N];
 
-        auto linearSpanX = x2Boundary - x1Boundary;
-        linearSpanX *= meshUnitMultiplier;
-        float stepX = (linearSpanX / (float)steps_) * meshUnitMultiplier;
+        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, N, linArrX, meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(y1Boundary, y2Boundary, N, linArrY, meshUnitMultiplier);
 
-        auto linearSpanY = y2Boundary - y1Boundary;
-        linearSpanY *= meshUnitMultiplier;
-        float stepY = (linearSpanX / (float)steps_) * meshUnitMultiplier;
-
-        auto linArrX = new float [steps_];
-        auto linArrY = new float [steps_];
-
-        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, stepX, linArrX);
-        SimulatorUtils::Math::assignLinearSpace(y1Boundary, y2Boundary, steps_, stepY, linArrY);
-
-        pointsArray = new float2* [steps_];
-
-        for(size_t i = 0; i < steps_; i++){
-
-            pointsArray[i] = new float2[steps_];
-        }
-
-        for(size_t i = 0; i < steps_; i++){
-            for(size_t j = 0; j < steps_; j++){
+        for(size_t i = 0; i < N; i++){
+            for(size_t j = 0; j < N; j++){
 
                 pointsArray[i][j].x = linArrX[i];
                 pointsArray[i][j].y = linArrY[j];
             }
         }
-
-        delete[] linArrX; delete[] linArrY;
-
     }
-    ~Mesh() override {
+    __host__ __device__ ~Mesh() override {}
 
-        for(size_t i = 0; i < steps_; i++){
+    __host__ __device__ float2 get(size_t idX, size_t idY){
 
-            delete[] pointsArray[i];
-        }
-        delete[] pointsArray;
-    }
-    static size_t size() {
-
-        return N*N*sizeof(float2);
-
-    }
-    float2 get(size_t idX, size_t idY){
-
+        assert(idX < N);
+        assert(idY < N);
         return pointsArray[idX][idY];
+    }
 
+    __host__ void newCudaInstance() override{
+        // Not implemented.
+    }
+
+    __host__ void deleteCudaInstance() override{
+        // Not implemented.
+    }
+
+    __host__ meshType** getCudaInstancePtr(){
+        // Not implemented.
+        return nullptr;
     }
 };
 
 template<int N>
-class Mesh<MeshUtils::Dim::D3, N> : protected MeshBase{
+class Mesh<MeshUtils::Dim::D3, N>: protected MeshBase, protected cudaAllocatableObject{
 
 private:
-    float3*** pointsArray{nullptr};
+    using meshType = Mesh<MeshUtils::Dim::D3, N>;
+    float3 pointsArray[N][N][N]{0.0};
+    float x1B, x2B, y1B, y2B, z1B, z2B;
 
 public:
-    Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary,
-         float y1Boundary, float y2Boundary, float z1Boundary, float z2Boundary): MeshBase(meshUnits, N) {
+    __host__ __device__ Mesh(MeshUtils::Units meshUnits, float x1Boundary, float x2Boundary,
+         float y1Boundary, float y2Boundary, float z1Boundary, float z2Boundary):
+         x1B(x1Boundary), x2B(x2Boundary),
+         y1B(y1Boundary), y2B(y2Boundary),
+         z1B(z1Boundary), z2B(z2Boundary),
+         MeshBase(meshUnits, N), cudaAllocatableObject(){
 
-        meshUnitMultiplier = (float)meshUnits;
+        float linArrX[N], linArrY[N], linArrZ[N];
 
-        auto linearSpanX = x2Boundary - x1Boundary;
-        linearSpanX *= meshUnitMultiplier;
-        float stepX = (linearSpanX / (float)steps_) * meshUnitMultiplier;
+        SimulatorUtils::Math::assignLinearSpace(x1B, x2B, N, linArrX, 1/meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(y1B, y2B, N, linArrY, 1/meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(z1B, z2B, N, linArrZ, 1/meshUnitMultiplier);
 
-        auto linearSpanY = y2Boundary - y1Boundary;
-        linearSpanY *= meshUnitMultiplier;
-        float stepY = (linearSpanX / (float)steps_) * meshUnitMultiplier;
-
-        auto linearSpanZ = z2Boundary - z1Boundary;
-        linearSpanZ *= meshUnitMultiplier;
-        float stepZ = (linearSpanX / (float)steps_) * meshUnitMultiplier;
-
-        auto linArrX = new float [steps_];
-        auto linArrY = new float [steps_];
-        auto linArrZ = new float [steps_];
-
-        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, stepX, linArrX);
-        SimulatorUtils::Math::assignLinearSpace(y1Boundary, y2Boundary, steps_, stepY, linArrY);
-        SimulatorUtils::Math::assignLinearSpace(z1Boundary, z2Boundary, steps_, stepZ, linArrZ);
-
-        pointsArray = new float3** [steps_];
-
-        for(size_t i = 0; i < steps_; i++){
-
-            pointsArray[i] = new float3*[steps_];
-
-            for(size_t j = 0; j < steps_; j++) {
-
-                pointsArray[i][j] = new float3[steps_];
-            }
-        }
-
-        for(size_t i = 0; i < steps_; i++){
-            for(size_t j = 0; j < steps_; j++){
-                for(size_t k = 0; k < steps_; k++) {
+        for(size_t i = 0; i < N; i++){
+            for(size_t j = 0; j < N; j++){
+                for(size_t k = 0; k < N; k++) {
 
                     pointsArray[i][j][k].x = linArrX[i];
                     pointsArray[i][j][k].y = linArrY[j];
                     pointsArray[i][j][k].z = linArrZ[k];
+
                 }
             }
         }
-
-        delete[] linArrX; delete[] linArrY; delete[] linArrZ;
     }
-    ~Mesh() override {
 
-        for(size_t i = 0; i < steps_; i++){
-            for(size_t j = 0; j < steps_; j++) {
+    __host__ __device__ ~Mesh() override {};
 
-                delete[] pointsArray[i][j];
-            }
-            delete[] pointsArray[i];
-        }
-        delete[] pointsArray;
-    };
+    __host__ __device__ float3 get(size_t idX, size_t idY, size_t idZ){
 
-    static size_t size() {
-
-        return N*N*N*sizeof(float3);
-
-    }
-    float3 get(size_t idX, size_t idY, size_t idZ){
-
+        assert(idX < N);
+        assert(idY < N);
+        assert(idZ < N);
         return pointsArray[idX][idY][idZ];
+    }
 
+    __host__ void newCudaInstance() override{
+
+        CUDA_ERRCHK(cudaMalloc((void**)&selfGPUInstance, sizeof(meshType*)))
+        cudaInstantiate3DMesh<<<1, 1>>>((meshType**) selfGPUInstance, (MeshUtils::Units) meshUnitMultiplier, x1B, x2B,
+                                        y1B, y2B, z1B, z2B);
+    }
+
+    __host__ void deleteCudaInstance() override{
+
+        cudaDelete3DMesh<<<1, 1>>>((meshType**) selfGPUInstance);
+        cudaFree(selfGPUInstance);
+    }
+
+    __host__ meshType** getCudaInstancePtr(){
+
+        return (meshType**)(this -> getGPUBasePtr());
     }
 };
 
-
 #endif //HELMHOLTZCUDA_MESHER_CUH
-
-

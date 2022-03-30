@@ -10,12 +10,13 @@ if(NOT DEFINED CMAKE_CUDA_STANDARD)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 endif()
 
-set(HEADERS_DIR include)
+set(HEADERS_DIR include include/cuda_types_utils include/kernels include/macros)
 set(SOURCE_DIR src)
 set(MUTUAL_SRC ${SOURCE_DIR}/tools/utils.cu
         ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
+        ${SOURCE_DIR}/cuda/cuda_float2_operators.cu
+        ${SOURCE_DIR}/cuda/cuda_float1_operators.cu
         ${SOURCE_DIR}/simulation/HelmholtzSet.cu
-        ${SOURCE_DIR}/kernels/env_kernels.cu
         ${SOURCE_DIR}/simulation/Mesher.cu)
 
 set(SOURCES_MAIN ${MUTUAL_SRC}
