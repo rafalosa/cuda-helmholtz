@@ -12,7 +12,7 @@ endif()
 
 set(HEADERS_DIR include include/cuda_types_utils include/kernels include/macros)
 set(SOURCE_DIR src)
-set(MUTUAL_SRC ${SOURCE_DIR}/tools/utils.cu
+set(MUTUAL_SRC ${SOURCE_DIR}/tools/Utils.cu
         ${SOURCE_DIR}/cuda/cuda_float3_operators.cu
         ${SOURCE_DIR}/cuda/cuda_float2_operators.cu
         ${SOURCE_DIR}/cuda/cuda_float1_operators.cu
