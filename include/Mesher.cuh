@@ -48,7 +48,7 @@ public:
 
         float linArr[N];
 
-        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, linArr, meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, steps_, linArr, 1/meshUnitMultiplier);
 
         for(size_t i = 0; i < steps_; i++){
 
@@ -94,8 +94,8 @@ public:
         float linArrX[N];
         float linArrY[N];
 
-        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, N, linArrX, meshUnitMultiplier);
-        SimulatorUtils::Math::assignLinearSpace(y1Boundary, y2Boundary, N, linArrY, meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(x1Boundary, x2Boundary, N, linArrX, 1/meshUnitMultiplier);
+        SimulatorUtils::Math::assignLinearSpace(y1Boundary, y2Boundary, N, linArrY, 1/meshUnitMultiplier);
 
         for(size_t i = 0; i < N; i++){
             for(size_t j = 0; j < N; j++){
@@ -172,6 +172,9 @@ public:
         assert(idZ < N);
         return pointsArray[idX][idY][idZ];
     }
+
+
+      //! Old interface for object allocation on cuda device. Left just as an implementation example.
 
     __host__ void newCudaInstance() override{
 

@@ -2,12 +2,11 @@
 // Created by rafal on 25.03.2022.
 //
 
-#if !defined(HELMHOLTZCUDA_HELMHOLTZSET_CUH)
+#ifndef HELMHOLTZCUDA_HELMHOLTZSET_CUH
 #define HELMHOLTZCUDA_HELMHOLTZSET_CUH
 
 #include "Utils.cuh"
-
-// todo: Add the same cuda allocation interface as for Meshes.
+#include "CudaAllocatorInterfaces.cuh"
 
 class HelmholtzSet{
 
@@ -40,7 +39,6 @@ public:
     __host__ __device__ float3  pointInductionVector(float3 point, float I) const;
 
 };
-
 
 
 #endif //HELMHOLTZCUDA_HELMHOLTZSET_CUH

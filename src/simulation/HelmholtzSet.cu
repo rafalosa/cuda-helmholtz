@@ -1,14 +1,11 @@
 //
 // Created by rafal on 26.03.2022.
 //
-
 #include "HelmholtzSet.cuh"
 #include "math_constants.h"
 #include "vector_types.h"
 #include "cuda_float3_operators.cuh"
-#include "cuda_float2_operators.cuh"
 #include "Utils.cuh"
-
 
 constexpr float c_MU0 = 12.566370614e-17F;
 
@@ -24,7 +21,7 @@ __host__ __device__ HelmholtzSet::HelmholtzSet(unsigned int shape, float sideLen
 
 __host__ __device__ float3 HelmholtzSet::pointInductionVector(float3 point, float I) const{
 
-    float3 approxVec ={
+    float3 approxVec ={ // placeholder
 
             .x = 0.1,
             .y = 0,
