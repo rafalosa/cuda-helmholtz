@@ -23,18 +23,18 @@ int main() {
 
     CUDAUtils::showCudaDeviceProps(0); // Displaying properties of 0th device.
 
-    auto ent = std::make_unique<HelmholtzSet>(8, 60, 1.9, 200, SimulatorUtils::Geometry::Plane::XY, 100, 0.1); // Host memory allocation for HelmholtzSet object.
+    auto ent = std::make_unique<HelmholtzSet>(4, 6, 1.9, 100, SimulatorUtils::Geometry::Plane::XY, 1, 1); // Host memory allocation for HelmholtzSet object.
 
-    auto res = ent->pointInductionVector(make_float3(1.2, 12, 0), 4); // CPU aka Host compute.
+    auto res = ent->pointInductionVector(make_float3(0, 0, 0), 10); // CPU aka Host compute.
 
     std::cout <<"CPU result: " << res << std::endl;  // Displaying CPU result.
 
     float3* resultGPU; // Host pointer to GPU memory storing the result.
     CUDA_ERRCHK(cudaMalloc((void**)&resultGPU, sizeof(float3))) // Allocating GPU memory for result.
 
-    auto entGPU = newCudaInstance<HelmholtzSet>(8, 60, 1.9, 200, SimulatorUtils::Geometry::Plane::XY, 100, 0.1);
+    auto entGPU = newCudaInstance<HelmholtzSet>(4, 6, 1.9, 100, SimulatorUtils::Geometry::Plane::XY, 1, 1);
 
-    GPUComputeTest<<<1,1>>>(entGPU, make_float3(1.2, 12, 0),4,resultGPU); // GPU compute using the object created on the GPU.
+    GPUComputeTest<<<1,1>>>(entGPU, make_float3(0, 0, 0),10,resultGPU); // GPU compute using the object created on the GPU.
 
     deleteCudaInstance(entGPU);
 

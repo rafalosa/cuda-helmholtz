@@ -173,7 +173,6 @@ public:
         return pointsArray[idX][idY][idZ];
     }
 
-
       //! Old interface for object allocation on cuda device. Left just as an implementation example.
 
     __host__ void newCudaInstance() override{

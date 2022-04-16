@@ -14,6 +14,8 @@
 // ------------------ Arithmetic operators ------------------
 
 __host__ __device__ float3 operator+(const float3& v1, const float3& v2);
+__host__ __device__ float3 operator-(const float3& v1, const float3& v2);
+__host__ __device__ float3& operator+=(float3& v1, const float3& v2);
 
 // Full declarations are here to avoid doing forward declarations of specialized templates.
 

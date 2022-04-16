@@ -35,11 +35,20 @@ namespace SimulatorUtils{
         };
     }
     namespace Math{
-        __host__ __device__  float3 crossProduct(float3 v1, float3 v2);
+        __host__ __device__  float3 crossProduct(const float3& v1, const float3& v2);
 
-        __host__ __device__ float norm(float3 vec);
+        __host__ __device__ float norm(const float3& vec);
 
-       __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float* target, float multiplier);
+       __host__ __device__ void assignLinearSpace(const float& boundary1,
+                                                  const float& boundary2,
+                                                  const size_t& steps,
+                                                  float* target,
+                                                  const float& multiplier);
+
+        __host__ __device__ float3 rotateAroundX(const float3& vec, const float& angle);
+        __host__ __device__ float3 rotateAroundY(const float3& vec, const float& angle);
+        __host__ __device__ float3 rotateAroundZ(const float3& vec, const float& angle);
+
     }
 }
 #endif //HELMHOLTZCUDA_UTILS_CUH

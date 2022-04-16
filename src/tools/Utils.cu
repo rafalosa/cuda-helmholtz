@@ -39,16 +39,20 @@ namespace SimulatorUtils {
         }
     }
     namespace Math {
-        __host__ __device__ float3 crossProduct(float3 v1, float3 v2) {
+        __host__ __device__ float3 crossProduct(const float3& v1, const float3& v2) {
             return make_float3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
         }
 
-        __host__ __device__ float norm(float3 vec) {
+        __host__ __device__ float norm(const float3& vec) {
 
             return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
         }
 
-        __host__ __device__ void assignLinearSpace(float boundary1, float boundary2, size_t steps, float* target, float multiplier = 1){
+        __host__ __device__ void assignLinearSpace(const float& boundary1,
+                                                   const float& boundary2,
+                                                   const size_t& steps,
+                                                   float* target,
+                                                   const float& multiplier = 1){
 
             auto linearSpan = (boundary2 - boundary1) * multiplier;
             float step = (linearSpan / (float)steps);
@@ -58,6 +62,24 @@ namespace SimulatorUtils {
                 target[i] = boundary1 * multiplier + (float)i * step;
 
             }
+        }
+
+        __host__ __device__ float3 rotateAroundX(const float3 &vec, const float &angle) {
+            return make_float3(vec.x,
+                               vec.y * cos(angle) - vec.z * sin(angle),
+                               vec.y*sin(angle) + vec.z*cos(angle));
+        }
+
+        __host__ __device__ float3 rotateAroundY(const float3 &vec, const float &angle) {
+            return make_float3(vec.x * cos(angle) + vec.z * sin(angle),
+                               vec.y,
+                               vec.z * cos(angle) - vec.x * sin(angle));
+        }
+
+        __host__ __device__ float3 rotateAroundZ(const float3 &vec, const float &angle) {
+            return make_float3(vec.x * cos(angle) - vec.y * sin(angle),
+                               vec.x * sin(angle) + vec.y * cos(angle),
+                               vec.z);
         }
     }
 }

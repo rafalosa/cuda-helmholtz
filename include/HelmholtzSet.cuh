@@ -13,18 +13,23 @@ class HelmholtzSet{
 private:
 
     using t_plane = SimulatorUtils::Geometry::Plane;
+    using angleRad_f = float;
 
-    unsigned int _turns{0};
-    float _wireGauge{0.0};
-    float _coilCenterDistance{0.0};
-    t_plane _coilsPlane{t_plane::OO}; // Default
-    unsigned int _coilPolygonSides{0};
-    float _sideLen{0.0};
-    float _externalAngleIncrement_rad{0.0};
-    float _internalAngleIncrement_rad{0.0};
-    float _dl{0.0};
+    unsigned int m_turns{0};
+    float m_wireGauge{0.0};
+    float m_coilCenterDistance{0.0};
+    t_plane m_coilsPlane{t_plane::OO}; // Default
+    unsigned int m_coilPolygonSides{0};
+    float m_sideLen{0.0};
+    angleRad_f m_externalAngleIncrement{0.0};
+    angleRad_f m_internalAngleIncrement{0.0};
+    float m_dl{0.0};
+    float3 m_coilCenters{0,0,0};
+    float3 m_coilStartPoint{0, 0, 0};
+    float3 m_dlVec{0, 0, 0};
+    float3 m_dirVecs[2] = {{0,0,0},{0,0,0}};
 
-    __host__ __device__ static float3 _biotSavart(float3 dl, float3 r, float I);
+    __host__ __device__ static float3 biotSavart(float3 dl, float3 r, float I);
 
 public:
 
@@ -39,6 +44,5 @@ public:
     __host__ __device__ float3  pointInductionVector(float3 point, float I) const;
 
 };
-
 
 #endif //HELMHOLTZCUDA_HELMHOLTZSET_CUH

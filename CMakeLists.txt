@@ -28,9 +28,13 @@ set(SOURCES_COMPUTE_EXAMPLE ${MUTUAL_SRC}
 set(SOURCES_MESHING_EXAMPLE ${MUTUAL_SRC}
         ${SOURCE_DIR}/examples/meshing.cu)
 
+set(SOURCES_MESH_EVAL_EXAMPLE ${MUTUAL_SRC}
+        ${SOURCE_DIR}/examples/mesh_eval_test.cu)
+
 add_executable(HelmholtzCUDAMain ${SOURCES_MAIN})
 add_executable(Example_Compute ${SOURCES_COMPUTE_EXAMPLE})
 add_executable(Example_Meshing ${SOURCES_MESHING_EXAMPLE})
+add_executable(Example_Mesh_Eval ${SOURCES_MESH_EVAL_EXAMPLE})
 
 set_target_properties(HelmholtzCUDAMain PROPERTIES
         CUDA_SEPARABLE_COMPILATION ON
@@ -53,3 +57,4 @@ set_target_properties(Example_Meshing PROPERTIES
 target_include_directories(HelmholtzCUDAMain PRIVATE ${HEADERS_DIR})
 target_include_directories(Example_Compute PRIVATE ${HEADERS_DIR})
 target_include_directories(Example_Meshing PRIVATE ${HEADERS_DIR})
+target_include_directories(Example_Mesh_Eval PRIVATE ${HEADERS_DIR})
