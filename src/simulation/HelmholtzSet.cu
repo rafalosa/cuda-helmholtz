@@ -7,7 +7,7 @@
 #include "cuda_float3_operators.cuh"
 #include "Utils.cuh"
 
-constexpr float c_MU0 = 12.566370614e-17F;
+constexpr float c_MU0 = 12.566370614e-7F;
 
 __host__ __device__ HelmholtzSet::HelmholtzSet(unsigned int shape, float sideLength, float wireGauge,
                                                float coilsDistance, t_plane plane, unsigned int turns, float dl): m_coilPolygonSides(shape),
@@ -64,7 +64,7 @@ __host__ __device__ HelmholtzSet::HelmholtzSet(unsigned int shape, float sideLen
     m_dirVecs[1] = -1 * m_dirVecs[0];
 }
 
-__host__ __device__ float3 HelmholtzSet::pointInductionVector(float3 point, float I) const{
+__host__ __device__ float3 HelmholtzSet::pointInductionVector(const float3& point, const float& I) const{
 
     using namespace SimulatorUtils::Geometry;
     using namespace SimulatorUtils::Math;
@@ -118,9 +118,10 @@ __host__ __device__ float3 HelmholtzSet::pointInductionVector(float3 point, floa
     return netPointMagneticInduction;
 }
 
-__host__ __device__ float3 HelmholtzSet::biotSavart(float3 dl, float3 r, float I){
+__host__ __device__ float3 HelmholtzSet::biotSavart(const float3& dl, const float3& r, const float& I){
 
-    float3 dB = c_MU0 * I / 4 / CUDART_PI_F * SimulatorUtils::Math::crossProduct(dl, r) / SimulatorUtils::Math::norm(r);
+    float3 dB = c_MU0 * I / 4 / CUDART_PI_F * SimulatorUtils::Math::crossProduct(dl, r) /
+            SimulatorUtils::Math::pow3(SimulatorUtils::Math::norm(r));
     return dB;
 
 }
