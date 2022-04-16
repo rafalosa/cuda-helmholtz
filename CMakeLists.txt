@@ -54,6 +54,12 @@ set_target_properties(Example_Meshing PROPERTIES
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
+set_target_properties(Example_Mesh_Eval PROPERTIES
+        CUDA_SEPARABLE_COMPILATION ON
+        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/arv"
+        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
 target_include_directories(HelmholtzCUDAMain PRIVATE ${HEADERS_DIR})
 target_include_directories(Example_Compute PRIVATE ${HEADERS_DIR})
 target_include_directories(Example_Meshing PRIVATE ${HEADERS_DIR})
