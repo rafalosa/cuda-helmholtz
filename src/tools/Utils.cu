@@ -81,5 +81,9 @@ namespace SimulatorUtils {
                                vec.x * sin(angle) + vec.y * cos(angle),
                                vec.z);
         }
+
+        __host__ __device__ float pow3(const float& arg) {
+            return arg * arg * arg;
+        }
     }
 }

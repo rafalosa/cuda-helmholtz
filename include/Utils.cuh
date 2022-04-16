@@ -35,9 +35,11 @@ namespace SimulatorUtils{
         };
     }
     namespace Math{
+
         __host__ __device__  float3 crossProduct(const float3& v1, const float3& v2);
 
         __host__ __device__ float norm(const float3& vec);
+        __host__ __device__ float pow3(const float& arg);
 
        __host__ __device__ void assignLinearSpace(const float& boundary1,
                                                   const float& boundary2,
