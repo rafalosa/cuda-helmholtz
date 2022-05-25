@@ -6,8 +6,7 @@
 template<MeshUtils::Dim, int N>
 class Mesh;
 
-// todo: These new/delete kernels could be templated for different dimensions of meshes. Then just implement template
-//  specializations. This would be cleaner. example: cudaInstantiate3DMesh would be cudaInstantiateMesh<MeshUtils::Dim::D3>
+// Old and unused
 
 template<int N>
 __global__ void cudaInstantiate3DMesh(Mesh<MeshUtils::Dim::D3, N>** meshPtr,

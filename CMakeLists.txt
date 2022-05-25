@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 project(HelmholtzCUDA CUDA)
-enable_language(CUDA)
+enable_language(CUDA CXX C)
 
 include(CheckLanguage)
 check_language(CUDA)

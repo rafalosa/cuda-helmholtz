@@ -13,4 +13,6 @@ __global__ void GPUComputeTest(HelmholtzSet** ptr, float3 point, float current, 
     *result = (*ptr)->pointInductionVector(point, current);
 }
 
+
+
 #endif //HELMHOLTZCUDA_HELMHOLTZENVKERNELS_CUH

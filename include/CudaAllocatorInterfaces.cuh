@@ -5,8 +5,19 @@
 
 namespace CUDAUtils
 {
-
-    /// Interface providers for dynamic object allocation on device memory.
+    /**
+    * Interface providers for dynamic object allocation on device memory. Based on templated functions with
+    * parameters packs and templated GPU kernels.
+    * Usage example:
+    *
+    * auto ptr = CUDAUtils::Memory::newCudaInstance<MyClass>(MyClassConstructorArguments);
+    *
+    * doStuffKernelExample<<<B,T>>>(ptr, args);
+    *
+    * Then you have to deallocate the memory
+    *
+    * CUDAUtils::Memory::deleteCudaInstance(ptr);
+    **/
 
     namespace
     {
@@ -29,15 +40,13 @@ namespace CUDAUtils
     namespace Memory
     {
 
-        // std::vector's emplace_back style interface.
-
         template<class AllocType, typename... Args>
         __host__ AllocType **newCudaInstance(Args &&... args)
         {
 
             AllocType **ptr;
             CUDA_ERRCHK(cudaMalloc((void **) &ptr, sizeof(AllocType *)))
-            cudaInstantiateObject<AllocType><<<1, 1>>>(ptr, args...);
+            cudaInstantiateObject<AllocType><<<1, 1>>>(ptr, std::forward<Args>(args)...);
             return ptr;
 
         }
@@ -51,8 +60,13 @@ namespace CUDAUtils
         }
 
         class cudaAllocatableObject
-        {   // First interface I came up with, based on inheritance and not very flexible.
-            // Requires/enables one to write custom instantiation kernels for each subclass.
+
+        {   /*
+            * First interface I came up with, based on inheritance and not very flexible.
+            * Requires/enables one to write custom instantiation kernels for each subclass.
+            * But if custom kernels are needed, you can always make a template specialization of
+            * the functions and kernels above.
+            */
 
         protected:
             cudaAllocatableObject **selfGPUInstance{nullptr};
