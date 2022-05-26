@@ -38,8 +38,13 @@ namespace SimulatorUtils{
 
         __host__ __device__  float3 crossProduct(const float3& v1, const float3& v2);
 
-        __host__ __device__ float norm(const float3& vec);
-        __host__ __device__ float pow3(const float& arg);
+        __host__ __device__ __forceinline__ float norm(const float3& vec) {
+
+            return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+        }
+        __host__ __device__ __forceinline__ float pow3(const float& arg) {
+            return arg * arg * arg;
+        }
 
        __host__ __device__ void assignLinearSpace(const float& boundary1,
                                                   const float& boundary2,

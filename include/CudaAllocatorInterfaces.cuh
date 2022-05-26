@@ -41,7 +41,7 @@ namespace CUDAUtils
     {
 
         template<class AllocType, typename... Args>
-        __host__ AllocType **newCudaInstance(Args &&... args)
+        __host__ AllocType** newCudaInstance(Args &&... args)
         {
 
             AllocType **ptr;

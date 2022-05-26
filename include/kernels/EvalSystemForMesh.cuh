@@ -8,7 +8,7 @@
 using namespace MeshUtils;
 
 template<int N>
-__global__ void EvalSystemForMesh(HelmholtzSet** system_ptr, Mesh<Dim::D3, N>** mesh_ptr, float3 result[][N][N]){
+__global__ void EvalSystemForMesh(HelmholtzSet** system_ptr, Mesh<Dim::D3, N>** mesh_ptr, float3 result[][N][N][N]){
 
     auto X = threadIdx.x;
     auto Y = threadIdx.y;
@@ -18,7 +18,7 @@ __global__ void EvalSystemForMesh(HelmholtzSet** system_ptr, Mesh<Dim::D3, N>** 
 
     auto pointInduction = (*system_ptr)->pointInductionVector(threadCoords, 5);
 
-    result[X][Y][Z] = pointInduction;
+    (*result)[X][Y][Z] = pointInduction;
 
 }
 

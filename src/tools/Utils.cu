@@ -43,11 +43,6 @@ namespace SimulatorUtils {
             return make_float3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
         }
 
-        __host__ __device__ float norm(const float3& vec) {
-
-            return sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-        }
-
         __host__ __device__ void assignLinearSpace(const float& boundary1,
                                                    const float& boundary2,
                                                    const size_t& steps,
@@ -60,7 +55,6 @@ namespace SimulatorUtils {
             for(size_t i=0; i <= steps; i++){
 
                 target[i] = boundary1 * multiplier + (float)i * step;
-
             }
         }
 
@@ -80,10 +74,6 @@ namespace SimulatorUtils {
             return make_float3(vec.x * cos(angle) - vec.y * sin(angle),
                                vec.x * sin(angle) + vec.y * cos(angle),
                                vec.z);
-        }
-
-        __host__ __device__ float pow3(const float& arg) {
-            return arg * arg * arg;
         }
     }
 }

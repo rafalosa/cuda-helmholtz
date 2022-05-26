@@ -120,7 +120,7 @@ __host__ __device__ float3 HelmholtzSet::pointInductionVector(const float3& poin
 
 __host__ __device__ float3 HelmholtzSet::biotSavart(const float3& dl, const float3& r, const float& I){
 
-    float3 dB = c_MU0 * I / 4 / CUDART_PI_F * SimulatorUtils::Math::crossProduct(dl, r) /
+    float3 dB = c_MU0 * I / 4.0f / CUDART_PI_F * SimulatorUtils::Math::crossProduct(dl, r) /
             SimulatorUtils::Math::pow3(SimulatorUtils::Math::norm(r));
     return dB;
 

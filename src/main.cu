@@ -11,7 +11,12 @@
 int main() {
 
     using namespace CUDAUtils;
-    constexpr unsigned int size{30};
+    constexpr unsigned int size{20};
+
+    cudaDeviceProp props{};
+    cudaGetDeviceProperties(&props, 0);
+    showCudaDeviceProps(0);
+    auto maxThreads = props.maxThreadsPerBlock;
 
     auto coils = Memory::newCudaInstance<HelmholtzSet>(8, 60, 1.9, 200, SimulatorUtils::Geometry::Plane::XY, 100, 0.1);
 
@@ -20,23 +25,26 @@ int main() {
                                                                         -100, 100,
                                                                         -100, 100);
 
-    typedef float3 rarr[size][size];
-    rarr *resultGPU;
+    using vecArr3D = float3[size][size][size];
+
+    vecArr3D* resultGPU;
     CUDA_ERRCHK(cudaMalloc((void**)&resultGPU, sizeof(float3)*size*size*size)) // Allocating GPU memory for result.
 
+
+    // todo: Add a occupancy optimizer for distributing the workload with the occupancy maximization.
     dim3 threads(size,size,1);
     dim3 blocks(size,1,1);
 
     EvalSystemForMesh<<<blocks, threads>>>(coils, mesh, resultGPU);
 
-    float3 resultHost[size][size][size];
+    vecArr3D resultHost;
     CUDA_ERRCHK(cudaMemcpy(resultHost, resultGPU, sizeof(float3)*size*size*size, cudaMemcpyDeviceToHost))
 
     cudaFree(resultGPU);
     Memory::deleteCudaInstance(mesh);
     Memory::deleteCudaInstance(coils);
 
-    std::cout << resultHost[5][5][6].x << std::endl;
+    std::cout << resultHost[9][9][9].z << std::endl;
 
     return 0;
 }
